@@ -34,6 +34,9 @@ public class PhysicsConnector implements IUpdateHandler, PhysicsConstants {
 	protected boolean mUpdatePosition;
 	protected boolean mUpdateRotation;
 	protected final float mPixelToMeterRatio;
+	
+	protected final float mPositionOffsetX;
+	protected final float mPositionOffsetY;
 
 	// ===========================================================
 	// Constructors
@@ -52,8 +55,21 @@ public class PhysicsConnector implements IUpdateHandler, PhysicsConstants {
 	}
 
 	public PhysicsConnector(final IAreaShape pAreaShape, final Body pBody, final boolean pUdatePosition, final boolean pUpdateRotation, final float pPixelToMeterRatio) {
+		this(pAreaShape, 0, 0, pBody, pUdatePosition, pUpdateRotation, pPixelToMeterRatio);
+	}
+	
+
+	public PhysicsConnector(final IAreaShape pAreaShape, final float pOffsetX, final float pOffsetY, final Body pBody, final boolean pUdatePosition, final boolean pUpdateRotation) {
+		this(pAreaShape, pOffsetX, pOffsetY, pBody, pUdatePosition, pUpdateRotation, PIXEL_TO_METER_RATIO_DEFAULT);
+	}
+	
+
+	public PhysicsConnector(final IAreaShape pAreaShape, final float pOffsetX, final float pOffsetY, final Body pBody, final boolean pUdatePosition, final boolean pUpdateRotation, final float pPixelToMeterRatio) {
 		this.mShape = pAreaShape;
 		this.mBody = pBody;
+		
+		this.mPositionOffsetX = pOffsetX;
+		this.mPositionOffsetY = pOffsetY;
 
 		this.mUpdatePosition = pUdatePosition;
 		this.mUpdateRotation = pUpdateRotation;
@@ -103,7 +119,7 @@ public class PhysicsConnector implements IUpdateHandler, PhysicsConstants {
 		if(this.mUpdatePosition) {
 			final Vector2 position = body.getPosition();
 			final float pixelToMeterRatio = this.mPixelToMeterRatio;
-			shape.setPosition(position.x * pixelToMeterRatio - this.mShapeHalfBaseWidth, position.y * pixelToMeterRatio - this.mShapeHalfBaseHeight);
+			shape.setPosition(position.x * pixelToMeterRatio - this.mShapeHalfBaseWidth + this.mPositionOffsetX, position.y * pixelToMeterRatio - this.mShapeHalfBaseHeight + this.mPositionOffsetY);
 		}
 
 		if(this.mUpdateRotation) {

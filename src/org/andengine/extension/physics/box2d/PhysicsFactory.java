@@ -80,6 +80,13 @@ public class PhysicsFactory {
 		return PhysicsFactory.createBoxBody(pPhysicsWorld, pAreaShape, pBodyType, pFixtureDef, PIXEL_TO_METER_RATIO_DEFAULT);
 	}
 
+	public static Body createBoxBody(final PhysicsWorld pPhysicsWorld, final IAreaShape pAreaShape, final float pWidth, final float pHeight, final BodyType pBodyType, final FixtureDef pFixtureDef) {
+		final float[] sceneCenterCoordinates = pAreaShape.getSceneCenterCoordinates();
+		final float centerX = sceneCenterCoordinates[Constants.VERTEX_INDEX_X];
+		final float centerY = sceneCenterCoordinates[Constants.VERTEX_INDEX_Y];
+		return PhysicsFactory.createBoxBody(pPhysicsWorld, centerX, centerY, pWidth, pHeight, pAreaShape.getRotation(), pBodyType, pFixtureDef, PIXEL_TO_METER_RATIO_DEFAULT);
+	}
+
 	public static Body createBoxBody(final PhysicsWorld pPhysicsWorld, final IAreaShape pAreaShape, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
 		final float[] sceneCenterCoordinates = pAreaShape.getSceneCenterCoordinates();
 		final float centerX = sceneCenterCoordinates[Constants.VERTEX_INDEX_X];
