@@ -238,19 +238,32 @@ public class PhysicsFactory {
 
 	/**
 	 * @param pPhysicsWorld
-	 * @param pShape
-	 * @param pVertices are to be defined relative to the center of the pShape.
+	 * @param pPositionX
+	 * @param pPositionY
+	 * @param pVertices are to be defined relative to the center of the pShape and have the {@link PhysicsConstants#PIXEL_TO_METER_RATIO_DEFAULT} applied.
 	 * @param pBodyType
 	 * @param pFixtureDef
 	 * @return
 	 */
-	public static Body createPolygonBody(final PhysicsWorld pPhysicsWorld, final IShape pShape, final Vector2[] pVertices, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
+	public static Body createPolygonBody(final PhysicsWorld pPhysicsWorld, final float pPositionX, final float pPositionY, final Vector2[] pVertices, final BodyType pBodyType, final FixtureDef pFixtureDef) {
+		return PhysicsFactory.createPolygonBody(pPhysicsWorld, pPositionX, pPositionY, pVertices, pBodyType, pFixtureDef, PIXEL_TO_METER_RATIO_DEFAULT);
+	}
+	
+	/**
+	 * @param pPhysicsWorld
+	 * @param pPositionX
+	 * @param pPositionY
+	 * @param pVertices are to be defined relative to the center of the pShape and have the {@link PhysicsConstants#PIXEL_TO_METER_RATIO_DEFAULT} applied.
+	 * @param pBodyType
+	 * @param pFixtureDef
+	 * @return
+	 */
+	public static Body createPolygonBody(final PhysicsWorld pPhysicsWorld, final float pPositionX, final float pPositionY, final Vector2[] pVertices, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
 		final BodyDef boxBodyDef = new BodyDef();
 		boxBodyDef.type = pBodyType;
 
-		final float[] sceneCenterCoordinates = pShape.getSceneCenterCoordinates();
-		boxBodyDef.position.x = sceneCenterCoordinates[Constants.VERTEX_INDEX_X] / pPixelToMeterRatio;
-		boxBodyDef.position.y = sceneCenterCoordinates[Constants.VERTEX_INDEX_Y] / pPixelToMeterRatio;
+		boxBodyDef.position.x = pPositionX / pPixelToMeterRatio;
+		boxBodyDef.position.y = pPositionY / pPixelToMeterRatio;
 
 		final Body boxBody = pPhysicsWorld.createBody(boxBodyDef);
 
@@ -264,6 +277,23 @@ public class PhysicsFactory {
 		boxPoly.dispose();
 
 		return boxBody;
+	}
+
+	/**
+	 * @param pPhysicsWorld
+	 * @param pShape
+	 * @param pVertices are to be defined relative to the center of the pShape.
+	 * @param pBodyType
+	 * @param pFixtureDef
+	 * @return
+	 */
+	public static Body createPolygonBody(final PhysicsWorld pPhysicsWorld, final IShape pShape, final Vector2[] pVertices, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
+	
+		final float[] sceneCenterCoordinates = pShape.getSceneCenterCoordinates();
+		float positionX = sceneCenterCoordinates[Constants.VERTEX_INDEX_X];
+		float positionY = sceneCenterCoordinates[Constants.VERTEX_INDEX_Y];
+
+		return createPolygonBody(pPhysicsWorld, positionX, positionY, pVertices, pBodyType, pFixtureDef, pPixelToMeterRatio);
 	}
 
 
